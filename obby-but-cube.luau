@@ -1,6 +1,7 @@
 --!strict
 
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
@@ -12,6 +13,9 @@ local queue_on_teleport = if type(queue_on_teleport) == "function"
 		else if type(fluxus) == "table" and type(fluxus.queue_on_teleport) == "function"
 			then fluxus.queue_on_teleport
 			else nil
+
+local remotes = ReplicatedStorage:WaitForChild("Remotes")
+local portalsRemoteFunction = remotes:WaitForChild("Portals") :: RemoteFunction
 
 local localPlayer = Players.LocalPlayer :: Player
 local leaderstats = localPlayer:WaitForChild("leaderstats")
@@ -63,6 +67,9 @@ local function handleLobby()
 	then
 		return
 	end
+	character:PivotTo(nullifyingPortal:GetPivot())
+	portalsRemoteFunction:InvokeServer(nullifyingPortal)
+
 	for _, child in nullifyingPortal:GetChildren() do
 		if
 			not (
@@ -73,7 +80,9 @@ local function handleLobby()
 		then
 			continue
 		end
+
 		character:PivotTo(child:GetPivot())
+
 		task.defer(function()
 			if
 				humanoidRootPart
