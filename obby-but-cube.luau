@@ -3,6 +3,8 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+-- local TeleportService = game:GetService("TeleportService")
+local VirtualUser = game:GetService("VirtualUser")
 local Workspace = game:GetService("Workspace")
 
 local firetouchinterest = firetouchinterest
@@ -13,6 +15,7 @@ local queue_on_teleport = if type(queue_on_teleport) == "function"
 		else if type(fluxus) == "table" and type(fluxus.queue_on_teleport) == "function"
 			then fluxus.queue_on_teleport
 			else nil
+local getconnections = getconnections
 
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
 local portalRemoteFunction = remotes:WaitForChild("Portal") :: RemoteFunction
@@ -24,6 +27,32 @@ local stageNumberValue = leaderstats:WaitForChild("Stage") :: NumberValue
 
 local cachedObbies = {} :: { [string]: Model }
 local isAlreadyQueuedOnTeleport = false
+
+-- local function rejoin()
+--     local placeId = game.PlaceId
+--     localPlayer:Kick()
+--     task.wait()
+--     if localPlayer then
+--         TeleportService:Teleport(placeId, localPlayer)
+--     end
+-- end
+
+local function disableIdle()
+	if type(getconnections) ~= "function" then
+		localPlayer.Idled:Connect(function()
+			VirtualUser:CaptureController()
+			VirtualUser:ClickButton2(Vector2.new())
+		end)
+		return
+	end
+	for _, connection in getconnections(localPlayer.Idled) do
+		if connection["Disable"] then
+			connection["Disable"](connection)
+		elseif connection["Disconnect"] then
+			connection["Disconnect"](connection)
+		end
+	end
+end
 
 local function getObbyFromDifficulty(): Model?
 	local obbies = Workspace:FindFirstChild("Obbies")
@@ -167,6 +196,7 @@ local function onTeleport()
 end
 
 local function initialize()
+    disableIdle()
 	localPlayer.OnTeleport:Connect(onTeleport)
 	RunService.Heartbeat:Connect(onHeartbeat)
 end
