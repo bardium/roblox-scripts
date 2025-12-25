@@ -15,7 +15,7 @@ local queue_on_teleport = if type(queue_on_teleport) == "function"
 			else nil
 
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
-local portalsRemoteFunction = remotes:WaitForChild("Portals") :: RemoteFunction
+local portalRemoteFunction = remotes:WaitForChild("Portal") :: RemoteFunction
 
 local localPlayer = Players.LocalPlayer :: Player
 local leaderstats = localPlayer:WaitForChild("leaderstats")
@@ -68,7 +68,7 @@ local function handleLobby()
 		return
 	end
 	character:PivotTo(nullifyingPortal:GetPivot())
-	portalsRemoteFunction:InvokeServer(nullifyingPortal)
+	portalRemoteFunction:InvokeServer(nullifyingPortal)
 
 	for _, child in nullifyingPortal:GetChildren() do
 		if
