@@ -26,7 +26,7 @@ local serverHopping = false
 local timeJoinedServer = os.clock()
 
 local MAX_TIME_ALLOWED_PER_SERVER = 5 * 60 -- 5 minutes
-local USER_IDS_RUNNING_SCRIPT = { 10329188918 }
+local USER_IDS_RUNNING_SCRIPT = { 10329188918, 10329231349 }
 local index = table.find(USER_IDS_RUNNING_SCRIPT, localPlayer.UserId)
 if index then
 	table.remove(USER_IDS_RUNNING_SCRIPT, index)
