@@ -21,6 +21,11 @@ local serverHopping = false
 local timeJoinedServer = os.clock()
 
 local MAX_TIME_ALLOWED_PER_SERVER = 5 * 60 -- 5 minutes
+local USER_IDS_RUNNING_SCRIPT = { 10329188918 }
+local index = table.find(USER_IDS_RUNNING_SCRIPT, localPlayer.UserId)
+if index then
+	table.remove(USER_IDS_RUNNING_SCRIPT, index)
+end
 
 local function serverHop()
 	local servers = {}
@@ -50,8 +55,24 @@ local function serverHop()
 	TeleportService:TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], localPlayer)
 end
 
+local function getPlayerCount()
+	local playerCount = 0
+
+	local players = Players:GetPlayers()
+	for _, player in players do
+		if table.find(USER_IDS_RUNNING_SCRIPT, player.UserId) then
+			return 0 -- we should not be in a server with other users running the script
+		end
+		if player.UserId == localPlayer.UserId then
+			continue
+		end
+		playerCount += 1
+	end
+	return playerCount
+end
+
 local function checkIfServerEmpty()
-	if #Players:GetPlayers() > 1 then
+	if getPlayerCount() > 0 then
 		return
 	end
 	if serverHopping then
