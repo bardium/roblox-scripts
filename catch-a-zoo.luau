@@ -18,6 +18,9 @@ local currentAnimals = Workspace:WaitForChild("CurrentAnimals")
 local queue: { Instance } = {}
 local processing = false
 local serverHopping = false
+local timeJoinedServer = os.clock()
+
+local MAX_TIME_ALLOWED_PER_SERVER = 5 * 60 -- 5 minutes
 
 local function serverHop()
 	local servers = {}
@@ -49,6 +52,20 @@ end
 
 local function checkIfServerEmpty()
 	if #Players:GetPlayers() > 1 then
+		return
+	end
+	if serverHopping then
+		return
+	end
+	serverHopping = true
+	task.delay(10, function()
+		serverHopping = false
+	end)
+	pcall(serverHop)
+end
+
+local function checkIfServerTimeExceeded()
+	if os.clock() - timeJoinedServer < MAX_TIME_ALLOWED_PER_SERVER then
 		return
 	end
 	if serverHopping then
@@ -106,6 +123,7 @@ local function processQueue()
 		task.wait(1)
 		createBodyPosition(humanoidRootPart)
 		checkIfServerEmpty()
+		checkIfServerTimeExceeded()
 	end
 
 	processing = false
@@ -126,4 +144,3 @@ local function initialize()
 end
 
 initialize()
-
