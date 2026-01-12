@@ -4,6 +4,11 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
 
+if workspace:GetAttribute("IsAlreadyExecuted") then
+	return
+end
+workspace:SetAttribute("IsAlreadyExecuted", true)
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
