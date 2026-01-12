@@ -22,7 +22,7 @@ local serverHopping = false
 local function serverHop()
 	local servers = {}
 	local response = (game :: any):HttpGet(
-		`https://games.roblox.com/v1/games/{game.PlaceId}/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true`
+		`https://games.roblox.com/v1/games/{game.PlaceId}/servers/Public?sortOrder=Desc&limit=10&excludeFullGames=true`
 	)
 	local body = HttpService:JSONDecode(response)
 	if not (body and body.data) then
